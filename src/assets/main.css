@@ -1,0 +1,11 @@
+@import './base.css';
+
+body {
+    color: var(--color-text);
+}
+
+@media (hover: hover) {
+}
+
+@media (min-width: 1024px) {
+}
