@@ -4,6 +4,12 @@ body {
     color: var(--color-text);
 }
 
+hr {
+    text-align: center;
+    margin-left: 10%;
+    border-color: rgba(255, 255, 255, 0.568);
+}
+
 @media (hover: hover) {
 }
 

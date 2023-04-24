@@ -15,7 +15,7 @@ export const useUserInfoStore = defineStore('userInfo', {
   getters: {
     getUserInfo(state) {
       if(!state.userInfo.username) {
-        state.userInfo = JSON.parese(window.localStorage.getItem("userInfo"))
+        state.userInfo = JSON.parse(window.localStorage.getItem("userInfo"))
       }
       return state.userInfo;
     }

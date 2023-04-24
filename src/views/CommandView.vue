@@ -1,29 +1,49 @@
 <script setup>
 import { CommandAPI } from "@/endpoints";
+import { useUserInfoStore } from "@/stores/userInfo";
+
+import CommandBox from "@/components/CommandBox.vue";
 </script>
 <template>
   <div class="commands">
+    <div v-if="canToggleEdit" class="commands_edit_mode_toggle">
+      <h2 v-if="commandsEditMode">Active</h2>
+      <h2 v-else>Inactive</h2>
+      <button @click="commandsEditMode = !commandsEditMode"><h2>Edit Mode</h2></button>
+    </div>
     <div v-for="(commands, gameName) in commandsForGame" v-bind:key="gameName">
       <input class="game_name" :id="'game_' + gameName" type="checkbox" />
       <label :for="'game_' + gameName">
         {{ gameName }}
       </label>
       <div class="game_commands">
-        <div class="command" v-for="command in commands" v-bind:key="command.id">
-          <h2>{{ command.title }}</h2>
-        </div>
+        <CommandBox
+          v-for="command in commands"
+          v-bind:key="command.id"
+          :command="command"
+          :canToggleMode="commandsEditMode"
+        />
       </div>
-      <hr />
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  components: {
+    CommandBox,
+  },
   data: () => {
     return {
       commandsForGame: {},
+      commandsEditMode: false,
     };
+  },
+  computed: {
+    canToggleEdit() {
+      const userStore = useUserInfoStore();
+      return userStore.getUserInfo.role === "OWNER";
+    },
   },
   async mounted() {
     // request commands
@@ -40,23 +60,22 @@ export default {
   flex-flow: column;
 }
 
-.command {
-  min-width: 300px;
-  max-width: 100vw;
-  height: 200px;
-  border-radius: 25px;
-  background-color: rgba(255, 255, 255, 0.568);
-  margin: 10px;
-  text-align: center;
-  transition: 0.5s;
-  overflow: hidden;
+.commands_edit_mode_toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.commands_edit_mode_toggle button {
+  margin-left: 10px;
+  border: none;
+  cursor: pointer;
+  background-color: rgba(48, 48, 48, 0.377);
+  color: var(--color-text);
 }
 
 .game_name {
   opacity: 0;
-}
-
-.game_name:checked ~ label {
 }
 
 .game_name ~ label {
@@ -74,25 +93,45 @@ export default {
   content: "";
 }
 
-.game_name:checked ~ .game_commands .command {
+.commands hr {
+  width: 60%;
+}
+
+.game_name:checked ~ .game_commands > .command {
   height: 0px;
   opacity: 0;
   margin-top: 0;
   margin-bottom: 0;
 }
 
-hr {
-  width: 80%;
-  text-align: center;
-  margin-left: 10%;
-  border-color: rgba(255, 255, 255, 0.568);
+.game_name_wrapper {
+  display: flex;
+  align-items: baseline;
+}
+
+.game_name_wrapper > span {
+  margin: 10px;
+}
+
+.game_name ~ span {
+  margin-left: 20px;
 }
 
 @media (min-width: 1024px) {
+  .commands > div {
+    width: 1024px;
+  }
+
+  .commands {
+    display: flex;
+    align-items: center;
+  }
+
   .game_commands {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
+    width: 1024px;
   }
 }
 </style>
