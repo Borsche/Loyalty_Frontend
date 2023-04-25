@@ -49,6 +49,7 @@ export default {
     // request commands
     this.commandsForGame = (await CommandAPI.getCommands()).data;
   },
+  methods: {},
 };
 </script>
 
@@ -89,10 +90,6 @@ export default {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
-.game_name ~ label::after {
-  content: "";
-}
-
 .commands hr {
   width: 60%;
 }
@@ -102,6 +99,7 @@ export default {
   opacity: 0;
   margin-top: 0;
   margin-bottom: 0;
+  overflow: hidden;
 }
 
 .game_name_wrapper {

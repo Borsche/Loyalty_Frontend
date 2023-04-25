@@ -1,14 +1,20 @@
-<script setup></script>
+<script setup>
+import { CommandAPI } from "@/endpoints";
+</script>
 <template>
   <div class="command">
     <div>
-      <input v-if="isEditMode" class="command_title_edit" :value="command.title" />
+      <input v-if="isEditMode" class="command_title_edit" v-model="command.title" />
       <h2 v-else>{{ command.title }}</h2>
       <pencil-icon
         v-if="canToggleMode && !editMode"
         class="command_edit_toggle"
         @click="editMode = true"
       />
+      <div class="command_edit_control" v-if="isEditMode">
+        <check-icon @click="updateCommand" />
+        <close-icon @click="editMode = false" />
+      </div>
       <hr />
     </div>
     <div>
@@ -17,7 +23,7 @@
         class="command_desc_edit"
         cols="40"
         rows="5"
-        :value="command.description"
+        v-model="command.description"
       />
       <span v-else class="command_desc">{{ command.description }}</span>
     </div>
@@ -29,7 +35,7 @@
           v-if="isEditMode"
           class="command_add_infos_cost_edit"
           type="number"
-          :value="command.cost"
+          v-model="command.cost"
         />
         <span v-else class="command_cost">Cost: {{ command.cost }}</span>
 
@@ -38,13 +44,9 @@
           v-if="isEditMode"
           class="command_add_infos_cooldown_edit"
           type="number"
-          :value="command.cooldown"
+          v-model="command.cooldown"
         />
         <span v-else class="command_cooldown">Cooldown: {{ command.cooldown }}</span>
-      </div>
-      <div v-if="isEditMode">
-        <check-icon />
-        <close-icon />
       </div>
     </div>
   </div>
@@ -74,6 +76,16 @@ export default {
       if (!this.canToggleMode) this.editMode = false;
     },
   },
+  methods: {
+    async updateCommand() {
+      try {
+        await CommandAPI.updateCommand(this.command);
+        this.editMode = false;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  },
   mounted() {},
 };
 </script>
@@ -88,7 +100,6 @@ export default {
   margin: 10px;
   text-align: center;
   transition: 0.5s;
-  overflow: hidden;
 
   display: flex;
   flex-direction: column;
@@ -120,7 +131,7 @@ export default {
 .command_desc_edit {
   line-height: 1.4;
   font-size: 15px;
-  width: 95%;
+  width: 80%;
 }
 
 .command_add_infos input {
@@ -156,6 +167,17 @@ export default {
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
+}
+
+.command_edit_control {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  height: 200px;
+  left: 3px;
+  top: 0;
+  justify-content: space-evenly;
+  z-index: 1;
 }
 
 @media (min-width: 1024px) {

@@ -12,7 +12,8 @@ export const UserAPI = {
 }
 
 export const CommandAPI = {
-    getCommands: () => axios.get('/command/commands', { headers })
+    getCommands: () => axios.get('/command/commands', { headers }),
+    updateCommand: (command) => axios.put('/command/update', command, { headers })
 }
 
 export const twitchAPI = {
