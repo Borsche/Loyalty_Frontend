@@ -13,7 +13,8 @@ export const UserAPI = {
 
 export const CommandAPI = {
     getCommands: () => axios.get('/command/commands', { headers }),
-    updateCommand: (command) => axios.put('/command/update', command, { headers })
+    updateCommand: (command) => axios.put('/command/update', command, { headers }),
+    addCommand: (command) => axios.post('/command/create', command, { headers }) 
 }
 
 export const twitchAPI = {

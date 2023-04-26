@@ -2,6 +2,8 @@
 import { CommandAPI } from "@/endpoints";
 import { useUserInfoStore } from "@/stores/userInfo";
 
+import { toRaw } from "vue";
+
 import CommandBox from "@/components/CommandBox.vue";
 </script>
 <template>
@@ -18,11 +20,17 @@ import CommandBox from "@/components/CommandBox.vue";
       </label>
       <div class="game_commands">
         <CommandBox
-          v-for="command in commands"
+          v-for="(command, index) in commands"
           v-bind:key="command.id"
           :command="command"
           :canToggleMode="commandsEditMode"
+          :ref="gameName + '_commands'"
+          :newlyAdded="addedNewObject && index === commands.length - 1"
+          @Added="addedNewObject = false"
         />
+        <div v-if="commandsEditMode" class="command" @click="addCommandToGame(gameName)">
+          <plus-icon class="plus" />
+        </div>
       </div>
     </div>
   </div>
@@ -37,6 +45,7 @@ export default {
     return {
       commandsForGame: {},
       commandsEditMode: false,
+      addedNewObject: false,
     };
   },
   computed: {
@@ -49,7 +58,26 @@ export default {
     // request commands
     this.commandsForGame = (await CommandAPI.getCommands()).data;
   },
-  methods: {},
+  methods: {
+    addCommandToGame(gameName) {
+      this.commandsForGame[gameName].push({
+        title: "New Command",
+        description: "Add your description",
+        name: "new_command",
+        game: gameName,
+        cost: 0,
+        cooldown: 0,
+        uses: null,
+        access_scope: "ALL",
+      });
+
+      this.addedNewObject = true;
+
+      // this.$refs[`${gameName}_commands`].at(-1).setEditMode(true);
+      //this.$refs[`${gameName}_commands`].at(-1).editMode = true;
+      //console.log(this.$refs);
+    },
+  },
 };
 </script>
 
@@ -113,6 +141,16 @@ export default {
 
 .game_name ~ span {
   margin-left: 20px;
+}
+
+.material-design-icon.plus {
+  height: 100%;
+  width: 100%;
+}
+
+.material-design-icon.plus > .material-design-icon__svg {
+  height: 100%;
+  width: 100%;
 }
 
 @media (min-width: 1024px) {

@@ -4,15 +4,15 @@ import { CommandAPI } from "@/endpoints";
 <template>
   <div class="command">
     <div>
-      <input v-if="isEditMode" class="command_title_edit" v-model="command.title" />
-      <h2 v-else>{{ command.title }}</h2>
+      <input v-if="isEditMode" class="command_title_edit" v-model="commandData.title" />
+      <h2 v-else>{{ commandData.title }}</h2>
       <pencil-icon
         v-if="canToggleMode && !editMode"
         class="command_edit_toggle"
         @click="editMode = true"
       />
       <div class="command_edit_control" v-if="isEditMode">
-        <check-icon @click="updateCommand" />
+        <check-icon @click="confirmCommand" />
         <close-icon @click="editMode = false" />
       </div>
       <hr />
@@ -23,9 +23,9 @@ import { CommandAPI } from "@/endpoints";
         class="command_desc_edit"
         cols="40"
         rows="5"
-        v-model="command.description"
+        v-model="commandData.description"
       />
-      <span v-else class="command_desc">{{ command.description }}</span>
+      <span v-else class="command_desc">{{ commandData.description }}</span>
     </div>
     <div>
       <hr />
@@ -35,18 +35,18 @@ import { CommandAPI } from "@/endpoints";
           v-if="isEditMode"
           class="command_add_infos_cost_edit"
           type="number"
-          v-model="command.cost"
+          v-model="commandData.cost"
         />
-        <span v-else class="command_cost">Cost: {{ command.cost }}</span>
+        <span v-else class="command_cost">Cost: {{ commandData.cost }}</span>
 
         <label v-if="isEditMode">Cooldown:</label>
         <input
           v-if="isEditMode"
           class="command_add_infos_cooldown_edit"
           type="number"
-          v-model="command.cooldown"
+          v-model="commandData.cooldown"
         />
-        <span v-else class="command_cooldown">Cooldown: {{ command.cooldown }}</span>
+        <span v-else class="command_cooldown">Cooldown: {{ commandData.cooldown }}</span>
       </div>
     </div>
   </div>
@@ -54,16 +54,20 @@ import { CommandAPI } from "@/endpoints";
 
 <script>
 export default {
+  expose: ["editMode"],
   data: () => {
     return {};
   },
   props: {
     command: {},
     canToggleMode: Boolean,
+    newlyAdded: Boolean,
   },
   data() {
     return {
-      editMode: false,
+      editMode: this.newlyAdded,
+      isNew: this.newlyAdded,
+      commandData: this.command,
     };
   },
   computed: {
@@ -75,14 +79,35 @@ export default {
     canToggleMode() {
       if (!this.canToggleMode) this.editMode = false;
     },
+    command() {
+      this.commandData = this.command;
+    },
   },
   methods: {
     async updateCommand() {
       try {
-        await CommandAPI.updateCommand(this.command);
+        await CommandAPI.updateCommand(this.commandData);
         this.editMode = false;
       } catch (e) {
         console.log(e);
+      }
+    },
+    async addNewCommand() {
+      try {
+        const reponse = await CommandAPI.addCommand(this.commandData);
+        this.commandData = reponse.data;
+        this.editMode = false;
+        this.isNew = false;
+        this.$emit("added");
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async confirmCommand() {
+      if (this.isNew) {
+        this.addNewCommand();
+      } else {
+        this.updateCommand();
       }
     },
   },
