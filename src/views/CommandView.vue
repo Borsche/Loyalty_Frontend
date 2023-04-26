@@ -18,7 +18,12 @@ import CommandBox from "@/components/CommandBox.vue";
       <label :for="'game_' + gameName">
         {{ gameName }}
       </label>
-      <div class="game_commands">
+      <div
+        :id="'game_commands_' + gameName"
+        class="game_commands"
+        :ondrop="drop"
+        :onDragover="(event) => event.preventDefault()"
+      >
         <CommandBox
           v-for="(command, index) in commands"
           v-bind:key="command.id"
@@ -72,6 +77,33 @@ export default {
       });
 
       this.addedNewObject = true;
+    },
+    async drop(event) {
+      event.preventDefault();
+      const game = event.target.id.substring("game_commands_".length);
+      if (!game) return;
+
+      const command = JSON.parse(event.dataTransfer.getData("dragCommand"));
+
+      // command is already in this game section
+      if (game === command.game) return;
+
+      // remove command from game array
+      this.commandsForGame[command.game] = this.commandsForGame[command.game].filter(
+        (cmd) => cmd.id !== command.id
+      );
+
+      // change game of command
+      command.game = game;
+
+      try {
+        await CommandAPI.updateCommand(command);
+      } catch (e) {
+        console.log(e);
+      }
+
+      // add command to game array
+      this.commandsForGame[game].push(command);
     },
   },
 };

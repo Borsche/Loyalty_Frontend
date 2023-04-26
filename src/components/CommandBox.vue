@@ -2,7 +2,7 @@
 import { CommandAPI } from "@/endpoints";
 </script>
 <template>
-  <div class="command">
+  <div class="command" :draggable="canToggleMode" :ondragstart="drag">
     <div>
       <input v-if="isEditMode" class="command_title_edit" v-model="commandData.title" />
       <h2 v-else>{{ commandData.title }}</h2>
@@ -108,6 +108,9 @@ export default {
       } else {
         this.updateCommand();
       }
+    },
+    drag(event) {
+      event.dataTransfer.setData("dragCommand", JSON.stringify(this.commandData));
     },
   },
   mounted() {},
