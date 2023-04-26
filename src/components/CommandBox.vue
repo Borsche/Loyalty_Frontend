@@ -54,7 +54,6 @@ import { CommandAPI } from "@/endpoints";
 
 <script>
 export default {
-  expose: ["editMode"],
   data: () => {
     return {};
   },

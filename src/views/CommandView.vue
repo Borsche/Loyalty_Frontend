@@ -72,10 +72,6 @@ export default {
       });
 
       this.addedNewObject = true;
-
-      // this.$refs[`${gameName}_commands`].at(-1).setEditMode(true);
-      //this.$refs[`${gameName}_commands`].at(-1).editMode = true;
-      //console.log(this.$refs);
     },
   },
 };
