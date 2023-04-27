@@ -32,6 +32,7 @@ import CommandBox from "@/components/CommandBox.vue";
           :ref="gameName + '_commands'"
           :newlyAdded="addedNewObject && index === commands.length - 1"
           @Added="addedNewObject = false"
+          @Deleted="removeCommandFromList(command)"
         />
         <div v-if="commandsEditMode" class="command" @click="addCommandToGame(gameName)">
           <plus-icon class="plus" />
@@ -89,9 +90,7 @@ export default {
       if (game === command.game) return;
 
       // remove command from game array
-      this.commandsForGame[command.game] = this.commandsForGame[command.game].filter(
-        (cmd) => cmd.id !== command.id
-      );
+      this.removeCommandFromList(command);
 
       // change game of command
       command.game = game;
@@ -104,6 +103,12 @@ export default {
 
       // add command to game array
       this.commandsForGame[game].push(command);
+    },
+
+    removeCommandFromList(command) {
+      this.commandsForGame[command.game] = this.commandsForGame[command.game].filter(
+        (cmd) => cmd.id !== command.id
+      );
     },
   },
 };
@@ -144,10 +149,6 @@ export default {
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
-}
-
-.commands hr {
-  width: 60%;
 }
 
 .game_name:checked ~ .game_commands > .command {

@@ -2,15 +2,16 @@
 import { CommandAPI } from "@/endpoints";
 </script>
 <template>
-  <div class="command" :draggable="canToggleMode" :ondragstart="drag">
-    <div>
+  <div
+    :class="isBeingDragged ? 'command drag' : 'command'"
+    :draggable="canToggleMode"
+    :ondragstart="drag"
+  >
+    <div class="command_title">
+      <close-icon v-if="canToggleMode && !editMode" @click="deleteCommand" />
       <input v-if="isEditMode" class="command_title_edit" v-model="commandData.title" />
       <h2 v-else>{{ commandData.title }}</h2>
-      <pencil-icon
-        v-if="canToggleMode && !editMode"
-        class="command_edit_toggle"
-        @click="editMode = true"
-      />
+      <pencil-icon v-if="canToggleMode && !editMode" @click="editMode = true" />
       <div class="command_edit_control" v-if="isEditMode">
         <check-icon @click="confirmCommand" />
         <close-icon @click="editMode = false" />
@@ -102,6 +103,14 @@ export default {
         console.log(e);
       }
     },
+    async deleteCommand() {
+      try {
+        await CommandAPI.deleteCommand(this.commandData.id);
+        this.$emit("deleted");
+      } catch (e) {
+        console.log(e);
+      }
+    },
     async confirmCommand() {
       if (this.isNew) {
         this.addNewCommand();
@@ -138,14 +147,30 @@ export default {
   justify-content: space-evenly;
 }
 
-.command_edit_toggle {
+.command_title {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.command_title > hr::before {
+  flex-basis: 100%;
+  width: 0;
+}
+
+.command_edit_toggle.left {
   position: absolute;
   top: 5px;
-  right: 10px;
+  left: 10px;
 }
 
 .command hr {
-  width: 80% !important;
+  width: 80%;
+  flex-basis: 100%;
+  margin: auto;
 }
 
 .command_title_edit {
