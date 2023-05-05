@@ -19,6 +19,11 @@ import { CommandAPI } from "@/endpoints";
       <hr />
     </div>
     <div>
+      <!--drag-icon
+        v-if="canToggleMode && !editMode"
+        class="command_edit_drag_icon"
+        @mousedown="startDrag"
+      /-->
       <textarea
         v-if="isEditMode"
         class="command_desc_edit"
@@ -230,6 +235,12 @@ export default {
   top: 0;
   justify-content: space-evenly;
   z-index: 1;
+}
+
+.command_edit_drag_icon {
+  position: absolute;
+  left: 0;
+  cursor: move;
 }
 
 @media (min-width: 1024px) {
