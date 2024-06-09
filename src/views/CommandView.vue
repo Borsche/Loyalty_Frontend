@@ -63,6 +63,7 @@ export default {
   async mounted() {
     // request commands
     this.commandsForGame = (await CommandAPI.getCommands()).data;
+    this.commandsForGame.none = []
   },
   methods: {
     addCommandToGame(gameName) {
