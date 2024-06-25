@@ -234,6 +234,7 @@ nav a:first-of-type {
     margin-right: 2rem;
     display: none;
     flex-grow: 2;
+    max-width: 66%;
 }
 
 #twitchEmbed iframe {

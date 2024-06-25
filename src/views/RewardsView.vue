@@ -2,7 +2,7 @@
 </script>
 <template>
     <div class="Rewards">
-        <h1>Rewards</h1>
+        
     </div>
 </template>
 
