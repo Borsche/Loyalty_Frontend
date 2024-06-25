@@ -1,203 +1,203 @@
 <script setup>
-import { CommandAPI } from "@/endpoints";
-import { useUserInfoStore } from "@/stores/userInfo";
+import { CommandAPI } from '@/endpoints'
+import { useUserInfoStore } from '@/stores/userInfo'
 
-import { toRaw } from "vue";
+import { toRaw } from 'vue'
 
-import CommandBox from "@/components/CommandBox.vue";
+import CommandBox from '@/components/CommandBox.vue'
 </script>
 <template>
-  <div class="commands">
-    <div v-if="canToggleEdit" class="commands_edit_mode_toggle">
-      <h2 v-if="commandsEditMode">Active</h2>
-      <h2 v-else>Inactive</h2>
-      <button @click="commandsEditMode = !commandsEditMode"><h2>Edit Mode</h2></button>
-    </div>
-    <div v-for="(commands, gameName) in commandsForGame" v-bind:key="gameName">
-      <input class="game_name" :id="'game_' + gameName" type="checkbox" />
-      <label :for="'game_' + gameName">
-        {{ gameName }}
-      </label>
-      <div
-        :id="'game_commands_' + gameName"
-        class="game_commands"
-        :ondrop="drop"
-        :onDragover="(event) => event.preventDefault()"
-      >
-        <CommandBox
-          v-for="(command, index) in commands"
-          v-bind:key="command.id"
-          :command="command"
-          :canToggleMode="commandsEditMode"
-          :ref="gameName + '_commands'"
-          :newlyAdded="addedNewObject && index === commands.length - 1"
-          @Added="addedNewObject = false"
-          @Deleted="removeCommandFromList(command)"
-        />
-        <div v-if="commandsEditMode" class="command" @click="addCommandToGame(gameName)">
-          <plus-icon class="plus" />
+    <div class="commands">
+        <div v-if="canToggleEdit" class="commands_edit_mode_toggle">
+            <h2 v-if="commandsEditMode">Active</h2>
+            <h2 v-else>Inactive</h2>
+            <button @click="commandsEditMode = !commandsEditMode"><h2>Edit Mode</h2></button>
         </div>
-      </div>
+        <div v-for="(commands, gameName) in commandsForGame" v-bind:key="gameName">
+            <input class="game_name" :id="'game_' + gameName" type="checkbox" />
+            <label :for="'game_' + gameName">
+                {{ gameName }}
+            </label>
+            <div
+                :id="'game_commands_' + gameName"
+                class="game_commands"
+                :ondrop="drop"
+                :onDragover="(event) => event.preventDefault()"
+            >
+                <CommandBox
+                    v-for="(command, index) in commands"
+                    v-bind:key="command.id"
+                    :command="command"
+                    :canToggleMode="commandsEditMode"
+                    :ref="gameName + '_commands'"
+                    :newlyAdded="addedNewObject && index === commands.length - 1"
+                    @Added="addedNewObject = false"
+                    @Deleted="removeCommandFromList(command)"
+                />
+                <div v-if="commandsEditMode" class="command" @click="addCommandToGame(gameName)">
+                    <plus-icon class="plus" />
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  components: {
-    CommandBox,
-  },
-  data: () => {
-    return {
-      commandsForGame: {},
-      commandsEditMode: false,
-      addedNewObject: false,
-    };
-  },
-  computed: {
-    canToggleEdit() {
-      const userStore = useUserInfoStore();
-      return userStore.getUserInfo.role === "OWNER";
+    components: {
+        CommandBox
     },
-  },
-  async mounted() {
-    // request commands
-    this.commandsForGame = (await CommandAPI.getCommands()).data;
-    this.commandsForGame.none = []
-  },
-  methods: {
-    addCommandToGame(gameName) {
-      this.commandsForGame[gameName].push({
-        title: "New Command",
-        description: "Add your description",
-        name: "new_command",
-        game: gameName,
-        cost: 0,
-        cooldown: 0,
-        uses: null,
-        access_scope: "ALL",
-      });
-
-      this.addedNewObject = true;
+    data: () => {
+        return {
+            commandsForGame: {},
+            commandsEditMode: false,
+            addedNewObject: false
+        }
     },
-    async drop(event) {
-      event.preventDefault();
-      const game = event.target.id.substring("game_commands_".length);
-      if (!game) return;
-
-      const command = JSON.parse(event.dataTransfer.getData("dragCommand"));
-
-      // command is already in this game section
-      if (game === command.game) return;
-
-      // remove command from game array
-      this.removeCommandFromList(command);
-
-      // change game of command
-      command.game = game;
-
-      try {
-        await CommandAPI.updateCommand(command);
-      } catch (e) {
-        console.log(e);
-      }
-
-      // add command to game array
-      this.commandsForGame[game].push(command);
+    computed: {
+        canToggleEdit() {
+            const userStore = useUserInfoStore()
+            return userStore.getUserInfo.role === 'OWNER'
+        }
     },
-
-    removeCommandFromList(command) {
-      this.commandsForGame[command.game] = this.commandsForGame[command.game].filter(
-        (cmd) => cmd.id !== command.id
-      );
+    async mounted() {
+        // request commands
+        this.commandsForGame = (await CommandAPI.getCommands()).data
+        this.commandsForGame.none = []
     },
-  },
-};
+    methods: {
+        addCommandToGame(gameName) {
+            this.commandsForGame[gameName].push({
+                title: 'New Command',
+                description: 'Add your description',
+                name: 'new_command',
+                game: gameName,
+                cost: 0,
+                cooldown: 0,
+                uses: null,
+                access_scope: 'ALL'
+            })
+
+            this.addedNewObject = true
+        },
+        async drop(event) {
+            event.preventDefault()
+            const game = event.target.id.substring('game_commands_'.length)
+            if (!game) return
+
+            const command = JSON.parse(event.dataTransfer.getData('dragCommand'))
+
+            // command is already in this game section
+            if (game === command.game) return
+
+            // remove command from game array
+            this.removeCommandFromList(command)
+
+            // change game of command
+            command.game = game
+
+            try {
+                await CommandAPI.updateCommand(command)
+            } catch (e) {
+                console.log(e)
+            }
+
+            // add command to game array
+            this.commandsForGame[game].push(command)
+        },
+
+        removeCommandFromList(command) {
+            this.commandsForGame[command.game] = this.commandsForGame[command.game].filter(
+                (cmd) => cmd.id !== command.id
+            )
+        }
+    }
+}
 </script>
 
 <style>
 .commands {
-  min-height: 100vh;
-  display: flex;
-  justify-content: flex-start;
-  flex-flow: column;
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    flex-flow: column;
 }
 
 .commands_edit_mode_toggle {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .commands_edit_mode_toggle button {
-  margin-left: 10px;
-  border: none;
-  cursor: pointer;
-  background-color: rgba(48, 48, 48, 0.377);
-  color: var(--color-text);
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: rgba(48, 48, 48, 0.377);
+    color: var(--color-text);
 }
 
 .game_name {
-  opacity: 0;
+    opacity: 0;
 }
 
 .game_name ~ label {
-  font-size: 2rem;
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently
+    font-size: 2rem;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
 .game_name:checked ~ .game_commands > .command {
-  height: 0px;
-  opacity: 0;
-  margin-top: 0;
-  margin-bottom: 0;
-  overflow: hidden;
+    height: 0px;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    overflow: hidden;
 }
 
 .game_name_wrapper {
-  display: flex;
-  align-items: baseline;
+    display: flex;
+    align-items: baseline;
 }
 
 .game_name_wrapper > span {
-  margin: 10px;
+    margin: 10px;
 }
 
 .game_name ~ span {
-  margin-left: 20px;
+    margin-left: 20px;
 }
 
 .material-design-icon.plus {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .material-design-icon.plus > .material-design-icon__svg {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 @media (min-width: 1024px) {
-  .commands > div {
-    width: 1024px;
-  }
+    .commands > div {
+        width: 1024px;
+    }
 
-  .commands {
-    display: flex;
-    align-items: center;
-  }
+    .commands {
+        display: flex;
+        align-items: center;
+    }
 
-  .game_commands {
-    display: flex;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    width: 1024px;
-  }
+    .game_commands {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        width: 1024px;
+    }
 }
 </style>
