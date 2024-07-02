@@ -1,8 +1,9 @@
 <script setup>
+
 </script>
 <template>
-    <div class="Rewards">
-        <h1>Trade</h1>
+    <div>
+        Trade
     </div>
 </template>
 

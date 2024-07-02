@@ -10,9 +10,14 @@ import TreasureChestIcon from 'vue-material-design-icons/TreasureChest.vue'
 import SlotMachine from 'vue-material-design-icons/SlotMachine.vue'
 import CardIcon from 'vue-material-design-icons/CardText.vue'
 import CompareIcon from 'vue-material-design-icons/CompareHorizontal.vue'
+import TwitchIcon from 'vue-material-design-icons/Twitch.vue'
 
 import App from './App.vue'
 import router from './router'
+
+// Import our custom CSS
+import './scss/styles.scss'
+import * as bootstrap from 'bootstrap'
 
 import './assets/main.css'
 
@@ -32,5 +37,6 @@ app.component('chest-icon', TreasureChestIcon)
 app.component('slotmachine-icon', SlotMachine)
 app.component('card-icon', CardIcon)
 app.component('compare-icon', CompareIcon)
+app.component('twitch-icon', TwitchIcon)
 
 app.mount('#app')

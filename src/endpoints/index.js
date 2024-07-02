@@ -8,7 +8,7 @@ export const headers = {
 
 export const UserAPI = {
     getUserInfo: () => axios.get('/user/', { headers }),
-    validateToken: () => axios.get('/user/validate', { headers })
+    validateToken: () => axios.get('/user/validate', { headers: { ...headers, "Cache-Control": "no-cache" }  })
 }
 
 export const CommandAPI = {

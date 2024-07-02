@@ -25,7 +25,7 @@ export default {
 
             userStore.setUserInfo((await UserAPI.getUserInfo()).data)
 
-            this.$router.push('/')
+            // this.$router.push('/')
         } catch (e) {
             console.log(e)
         }

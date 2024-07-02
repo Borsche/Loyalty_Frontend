@@ -6,8 +6,8 @@ import { headers, UserAPI } from '@/endpoints'
 </script>
 
 <template>
-    <header>
-        <div class="wrapper">
+    <header class="border-bottom text-white d-flex justify-content-between align-items-center w-100">
+        <div class="wrapper d-flex justify-content-around justify-content-lg-start flex-wrap align-items-center w-100">
             <input id="menu_toggle" type="checkbox" />
             <label class="menu_btn" for="menu_toggle">
                 <span></span>
@@ -44,11 +44,11 @@ import { headers, UserAPI } from '@/endpoints'
         </nav>
         </div>
     </header>
-    <div id="content">
-        <div class="side">
+    <div class="row m-0 p-3" style="height: calc(100% - 150px)">
+        <div class="col-4 p-0 rounded border bg-primary" style="--bs-bg-opacity: var(--custom-bg-opacity)">
             <RouterView />
         </div>
-        <div id="twitchEmbed"></div>
+        <div class="col-8 d-none d-lg-block" id="twitchEmbed"></div>
     </div>
 </template>
 
@@ -77,30 +77,13 @@ export default {
 
 <style scoped>
 header {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-bottom: 1px solid var(--color-text);
     background-color: #00000027;
-    color: white;
-    justify-content: space-between;
-    width: 100%;
-    display: flex;
-    align-items: center;
-}
-
-header .wrapper {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    flex-wrap: wrap;
-    align-items: center;
 }
 
 nav {
     display: flex;
     justify-content: space-between;
     align-content: space-between;
-    order: 3;
     flex-basis: 100%;
     flex-direction: column;
     overflow: hidden;
@@ -223,20 +206,6 @@ nav a:first-of-type {
     line-height: 1.4rem;
 }
 
-#content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 2rem;
-}
-
-#twitchEmbed {
-    margin-right: 2rem;
-    display: none;
-    flex-grow: 2;
-    max-width: 66%;
-}
-
 #twitchEmbed iframe {
     width: 100% !important;
 }
@@ -289,14 +258,6 @@ nav a:first-of-type {
 
     #content {
         height: calc(100% - 150px);
-    }
-
-    #content .side {
-        height: 100%
-    }
-
-    #twitchEmbed {
-        display: block;
     }
 }
 </style>

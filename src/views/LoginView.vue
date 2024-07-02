@@ -1,13 +1,14 @@
-<script setup></script>
+<script setup>
+    import oidc from '../oidc'
+</script>
 
 <template>
-    <main>
-        <div>
-            <a
-                href="https://id.twitch.tv/oauth2/authorize?client_id=86dn54lk93xa00ezi86xcsc8eewz8r&redirect_uri=http://localhost:8082/auth/signinwin/home&scope=openid&response_type=token&claims=%7B%22userinfo%22%3A%7B%22picture%22%3Anull%2C%20%22preferred_username%22%3A%20null%7D%7D"
-            >
-                Connect with Twitch
-            </a>
-        </div>
-    </main>
+    <div class="d-flex justify-content-center align-items-center h-100 flex-column text-center text-white">
+        👁️👄👁️<br>
+        You are not logged in. 😮
+        <button class="btn btn-primary border-0" @click="oidc.authorize()" style="background-color: #9146FF"><twitch-icon></twitch-icon> Login with Twitch</button>
+    </div>
 </template>
+
+<script>
+</script>
