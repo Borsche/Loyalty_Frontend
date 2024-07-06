@@ -1,6 +1,6 @@
 const settings = {
     issuer: 'https://id.twitch.tv/oauth2/',
-    claims: 'claims={"id_token":{"picture":null},"userinfo":{"picture":null}}',
+    claims: '{"userinfo":{"picture":null}}',
     response_type: 'id_token+token',
     scope: 'openid',
     redirect_uri: 'http://localhost:8082/auth/signinwin/home',
@@ -12,7 +12,7 @@ function authorize() {
     oidc.nonce = generateId()
 
     window.localStorage.setItem('state', oidc.state)
-    window.localStorage.setItem('nonce', oidc.state)
+    window.localStorage.setItem('nonce', oidc.nonce)
 
     const query =
         `?response_type=${oidc.settings.response_type}` +
@@ -26,17 +26,12 @@ function authorize() {
     window.location.href = oidc.settings.issuer + 'authorize' + query
 }
 
-function validate() {}
-
-function getUserInfo() {}
-
 const oidc = {
     settings,
     state: window.localStorage.getItem('state'),
     nonce: window.localStorage.getItem('nonce'),
     authorize,
-    validate,
-    getUserInfo
+    parseJwt
 }
 
 /**

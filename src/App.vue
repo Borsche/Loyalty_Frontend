@@ -13,10 +13,11 @@ import { headers, UserAPI } from '@/endpoints'
                 <span></span>
             </label>
             <div id="profile_info">
-                <img id="profile_picture" v-show="userInfo.picture" :src="userInfo.picture" />
+                <img id="profile_picture" v-if="!userInfo.picture" src="@/assets/no_profile.png"/>
+                <img id="profile_picture" v-else="userInfo.picture" :src="userInfo.picture" />
                 <div>
                     <span id="username">{{ userInfo.username }}</span>
-                    <span>Punkte: 0</span>
+                    <span class="ms-2">Punkte: 0</span>
                 </div>
             </div>
 
