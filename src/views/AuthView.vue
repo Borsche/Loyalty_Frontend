@@ -35,9 +35,10 @@ export default {
 
             localStorage.setItem('access_token', token)
 
-            userStore.setUserInfo((await UserAPI.getUserInfo()).data)
+            const userInfo = (await UserAPI.getUserInfo()).data;
+            userStore.updateUserInfo(({ ...userInfo, username: claims.preferred_username }))
 
-            // this.$router.push('/')
+            this.$router.push('/')
         } catch (e) {
             console.log(e)
         }

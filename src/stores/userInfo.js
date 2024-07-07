@@ -12,31 +12,13 @@ export const useUserInfoStore = defineStore('userInfo', {
             }
         }
     },
-    getters: {
-        getUserInfo(state) {
-            if (!state.userInfo.username) {
-                state.userInfo = JSON.parse(window.localStorage.getItem('userInfo'))
+    actions: {
+        updateUserInfo(userInfo) {
+            this.userInfo = {
+                ...this.userInfo,
+                ...userInfo
             }
-            return state.userInfo
         }
     },
-    actions: {
-        setUserInfo(payload) {
-            this.userInfo = payload
-            window.localStorage.setItem('userInfo', JSON.stringify(payload))
-        }
-    }
-})
-
-export const useAuthStore = defineStore('auth', {
-    state: () => {
-        return {
-            userInfo: {
-                picture: '',
-                points: 0,
-                role: 'USER',
-                username: ''
-            }
-        }
-    }
+    persist: true,
 })
