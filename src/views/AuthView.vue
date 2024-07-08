@@ -1,6 +1,5 @@
 <script setup>
 import { useUserInfoStore } from '@/stores/userInfo'
-import { mapWritableState } from 'pinia'
 import { UserAPI, headers } from '@/endpoints'
 import oidc from '@/oidc'
 </script>
@@ -22,7 +21,6 @@ export default {
                 throw new Error('invalid token');
             
             const claims = oidc.parseJwt(params.get('id_token'));
-            console.log(claims);
 
             if(claims.nonce != oidc.nonce)
                 throw new Error('invalid token');
@@ -36,7 +34,7 @@ export default {
             localStorage.setItem('access_token', token)
 
             const userInfo = (await UserAPI.getUserInfo()).data;
-            userStore.updateUserInfo(({ ...userInfo, username: claims.preferred_username }))
+            userStore.updateUserInfo((userInfo))
 
             this.$router.push('/')
         } catch (e) {

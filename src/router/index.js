@@ -7,6 +7,7 @@ import LoginView from '@/views/LoginView.vue'
 import { headers, UserAPI } from '@/endpoints'
 import TradeView from '@/views/TradeView.vue'
 import MessageView from '@/views/MessageView.vue'
+import { useUserInfoStore } from '@/stores/userInfo'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -64,6 +65,14 @@ router.beforeEach(async (to, from) => {
             localStorage.removeItem('access_token')
         }
     }
+
+    if(isAuthenticated) {
+        const userStore = useUserInfoStore()
+
+        const userInfo = (await UserAPI.getUserInfo()).data;
+        userStore.updateUserInfo((userInfo))
+    }
+
     if (
         // make sure the user is authenticated
         !isAuthenticated &&

@@ -1,6 +1,6 @@
 const settings = {
     issuer: 'https://id.twitch.tv/oauth2/',
-    claims: '{"userinfo":{"picture":null}}',
+    claims: '{"userinfo":{"picture":null, "preferred_username": null}}',
     response_type: 'id_token+token',
     scope: 'openid',
     redirect_uri: 'http://localhost:8082/auth/signinwin/home',
