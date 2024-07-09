@@ -17,7 +17,7 @@ import { headers, UserAPI } from '@/endpoints'
                 <img id="profile_picture" v-else :src="userInfo.picture" />
                 <div>
                     <span id="username">{{ userInfo.username }}</span>
-                    <span class="ms-2">Pkt.: {{ userInfo.points }}</span>
+                    <span class="ms-2 d-flex align-items-end"><points-icon size="small" /> {{ userInfo.points }}</span>
                 </div>
             </div>
 

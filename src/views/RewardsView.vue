@@ -1,4 +1,7 @@
 <script setup>
+    import { RewardAPI } from '@/endpoints'
+    import DailyCard from '@/components/Rewards/DailyCard.vue'
+
     const oneDay = 24*60*60*1000;
 </script>
 <template>
@@ -15,16 +18,9 @@
                         Get your daily rewards.
                         <div class="container">
                             <div class="row">
-                                <div class="col">{{ formatDate(new Date(today - oneDay * 3)) }}</div>
-                                <div class="col">{{ formatDate(new Date(today - oneDay * 2)) }}</div>
-                                <div class="col">{{ formatDate(new Date(today - oneDay * 1)) }}</div>
-                                <div class="col">
-                                    Today <br>
-                                    {{ formatDate(today) }}
+                                <div class="col" v-for="daily, key in dailys">
+                                    <DailyCard :reward="daily.reward" :date="new Date(daily.date)" :amount="daily.amount" :isToday="key == 3"></DailyCard>
                                 </div>
-                                <div class="col">{{ formatDate(new Date(today + oneDay * 1)) }}</div>
-                                <div class="col">{{ formatDate(new Date(today + oneDay * 2)) }}</div>
-                                <div class="col">{{ formatDate(new Date(today + oneDay * 3)) }}</div>
                             </div>
                         </div>
                     </div>
@@ -67,19 +63,16 @@ export default {
     components: {},
     data: () => {
         return {
-            today: new Date(),
+            dailys: []
         }
     },
     computed: {
     },
     async mounted() {
+        const response = await RewardAPI.getDaily();
+        this.dailys = await response.data;
     },
     methods: {
-        formatDate: function(d) {
-            console.log(d);
-            d = new Date(d);
-            return `${(d.getDate())}.${(d.getMonth() + 1)}.`;
-        }
     }
 }
 </script>

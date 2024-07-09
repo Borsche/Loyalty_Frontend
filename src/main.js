@@ -13,6 +13,8 @@ import CardIcon from 'vue-material-design-icons/CardText.vue'
 import CompareIcon from 'vue-material-design-icons/CompareHorizontal.vue'
 import TwitchIcon from 'vue-material-design-icons/Twitch.vue'
 
+import PointsIcon from './components/CustomIcons/PointsIcon.vue'
+
 import App from './App.vue'
 import router from './router'
 
@@ -41,5 +43,7 @@ app.component('slotmachine-icon', SlotMachine)
 app.component('card-icon', CardIcon)
 app.component('compare-icon', CompareIcon)
 app.component('twitch-icon', TwitchIcon)
+
+app.component('points-icon', PointsIcon)
 
 app.mount('#app')

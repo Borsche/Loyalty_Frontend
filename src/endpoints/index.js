@@ -18,6 +18,10 @@ export const CommandAPI = {
     deleteCommand: (id) => axios.post('/command/delete', { id }, { headers })
 }
 
+export const RewardAPI = {
+    getDaily: () => axios.get('/reward/getdaily', { headers }),
+}
+
 export const twitchAPI = {
     getCategories: (query) => {
         const headers = {
